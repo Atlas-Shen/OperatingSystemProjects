@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-class QTimer;
 class CpuWidget;
 class MemSwapWidget;
 class StatusWidget;
@@ -24,7 +23,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    QTimer *pTimer;
     CpuWidget *pCpuWidget;
     MemSwapWidget *pMemSwapWidget;
     StatusWidget *pStatusWidget;

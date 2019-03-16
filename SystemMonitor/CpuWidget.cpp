@@ -23,10 +23,8 @@ CpuWidget::CpuWidget(QWidget *parent)
     pSeries->append(mSeriesX++, SysInfo::instance().cpuUsage());
 }
 
-void CpuWidget::updateSeries() {
-    double cpuUsage = SysInfo::instance().cpuUsage();
-    pSeries->append(mSeriesX++, cpuUsage);
-    emit sendCpuUsage(cpuUsage);
+void CpuWidget::update() {
+    pSeries->append(mSeriesX++, SysInfo::instance().cpuUsage());
     if (pSeries->count() > CHART_X_RANGE + 1) {
         pSeries->remove(0);
         QChart *chart = pChartView->chart();

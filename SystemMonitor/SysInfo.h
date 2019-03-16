@@ -1,32 +1,46 @@
 #ifndef SYSINFO_H
 #define SYSINFO_H
 
-#include <array>
+#include <QObject>
+#include <fstream>
 #include <QString>
+#include <QDateTime>
+#include <QTimer>
 
-class SysInfo {
+class SysInfo : public QObject {
+    Q_OBJECT
 
 public:
     static SysInfo &instance();
 
-    QString &hostname();
-    QString &systemVer();
-    QString &cpuInfo();
-    QString &startingTime();
-    QString &lastingTime();
-    double cpuUsage();
-    double memUsage();
-    double swapUsage();
+    QString hostname();
+    QString systemVer();
+    QString cpuInfo();
+    QString startingTime();
+    QString lastingTime();
+
+    double cpuUsage() const;
+    double memUsage() const;
+    double swapUsage() const;
+
+signals:
+    void toMainWindow();
+    void toStatusWidget();
+    void toResourceWidget();
 
 private:
-    QString mHostname;
-    QString mSystemVer;
-    QString mCpuInfo;
-    QString mStartingTime;
-    QString mLastingTime;
-    std::array<unsigned long long, 10> mCpuData;
+    std::ifstream mFile;
+    QDateTime mStartingTime;
+    QTimer mTimer;
+    std::array<unsigned long long, 2> mPrevCpuRawData;
+    std::array<unsigned long long, 2> mCurCpuRawData;
+    double mCpuUsage;
+    double mMemUsage;
+    double mSwapUsage;
 
-    std::array<unsigned long long, 10> cpuRawData();
+    void update();
+    void setCpuUsage();
+    void setMemSwapUsage();
 
     SysInfo();
     SysInfo(const SysInfo &) = delete;
@@ -40,24 +54,24 @@ inline SysInfo &SysInfo::instance() {
     return singleton;
 }
 
-inline QString &SysInfo::hostname() {
-    return mHostname;
+inline QString SysInfo::startingTime() {
+    return mStartingTime.toString("yyyy-MM-dd ddd hh:mm:ss");
 }
 
-inline QString &SysInfo::systemVer() {
-    return mSystemVer;
+inline QString SysInfo::lastingTime() {
+    return QString::number(mStartingTime.secsTo(QDateTime::currentDateTime()) + 's');
 }
 
-inline QString &SysInfo::cpuInfo() {
-    return mCpuInfo;
+inline double SysInfo::cpuUsage() const {
+    return mCpuUsage;
 }
 
-inline QString &SysInfo::lastingTime() {
-    return mLastingTime;
+inline double SysInfo::memUsage() const {
+    return mMemUsage;
 }
 
-inline QString &SysInfo::startingTime() {
-    return mStartingTime;
+inline double SysInfo::swapUsage() const {
+    return mSwapUsage;
 }
 
 #endif // SYSINFO_H

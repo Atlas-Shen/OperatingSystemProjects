@@ -13,11 +13,8 @@ class CpuWidget : public ResourceWidget {
 public:
     explicit CpuWidget(QWidget *parent = nullptr);
 
-signals:
-    void sendCpuUsage(double);
-
 private slots:
-    void updateSeries() override;
+    void update() override;
 
 private:
     QtCharts::QLineSeries *pSeries;

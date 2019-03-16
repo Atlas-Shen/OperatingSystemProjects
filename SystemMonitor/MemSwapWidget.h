@@ -13,11 +13,8 @@ class MemSwapWidget : public ResourceWidget {
 public:
     explicit MemSwapWidget(QWidget *parent = nullptr);
 
-signals:
-    void sendMemSwapUsage(double, double);
-
 private slots:
-    void updateSeries() override;
+    void update() override;
 
 private:
     QtCharts::QLineSeries *pMemSeries;

@@ -31,12 +31,9 @@ MemSwapWidget::MemSwapWidget(QWidget *parent)
     pSwapSeries->append(mSwapSeriesX++, SysInfo::instance().swapUsage());
 }
 
-void MemSwapWidget::updateSeries() {
-    double memUsage = SysInfo::instance().memUsage();
-    double swapUsage = SysInfo::instance().swapUsage();
-    pMemSeries->append(mMemSeriesX++, memUsage);
-    pSwapSeries->append(mSwapSeriesX++, swapUsage);
-    emit sendMemSwapUsage(memUsage, swapUsage);
+void MemSwapWidget::update() {
+    pMemSeries->append(mMemSeriesX++, SysInfo::instance().memUsage());
+    pSwapSeries->append(mSwapSeriesX++, SysInfo::instance().swapUsage());
     if (pMemSeries->count() > CHART_X_RANGE + 1) {
         pMemSeries->remove(0);
         pSwapSeries->remove(0);

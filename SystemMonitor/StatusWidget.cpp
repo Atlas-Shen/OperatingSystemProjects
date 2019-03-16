@@ -1,28 +1,22 @@
 #include "StatusWidget.h"
 #include "ui_StatusWidget.h"
-#include "CpuWidget.h"
-#include "MemSwapWidget.h"
+#include "SysInfo.h"
 #include <QString>
 
-StatusWidget::StatusWidget(CpuWidget *p1, MemSwapWidget *p2, QWidget *parent)
+StatusWidget::StatusWidget(QWidget *parent)
     : QWidget(parent),
-      ui(new Ui::StatusWidget),
-      pCpuWidget(p1),
-      pMemSwapWidget(p2) {
+      ui(new Ui::StatusWidget) {
     ui->setupUi(this);
-    connect(pCpuWidget, &CpuWidget::sendCpuUsage, this, &StatusWidget::showCpuUsage);
-    connect(pMemSwapWidget, &MemSwapWidget::sendMemSwapUsage, this, &StatusWidget::showMemSwapUsage);
+    connect(&SysInfo::instance(), &SysInfo::toStatusWidget, this, &StatusWidget::update);
+    update();
 }
 
 StatusWidget::~StatusWidget() {
     delete ui;
 }
 
-void StatusWidget::showCpuUsage(double cpuUsage) {
-    ui->cpuUsageLabel->setText("CPU: " + QString::number(cpuUsage, 'f', 2) + '%');
-}
-
-void StatusWidget::showMemSwapUsage(double memUsage, double swapUsage) {
-    ui->memUsageLabel->setText("Mem: " + QString::number(memUsage, 'f', 2) + '%');
-    ui->swapUsageLabel->setText("Swap: " + QString::number(swapUsage, 'f', 2) + '%');
+void StatusWidget::update() {
+    ui->cpuUsageLabel->setText(QString("CPU: %1%").arg(SysInfo::instance().cpuUsage(), 0, 'f', 2));
+    ui->memUsageLabel->setText(QString("Mem: %1%").arg(SysInfo::instance().memUsage(), 0, 'f', 2));
+    ui->swapUsageLabel->setText(QString("Swap: %1%").arg(SysInfo::instance().swapUsage(), 0, 'f', 2));
 }

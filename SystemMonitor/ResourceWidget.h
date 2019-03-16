@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <QPen>
 
-class QTimer;
-
 namespace QtCharts {
 class QChartView;
 }
@@ -26,10 +24,7 @@ protected:
     QtCharts::QChartView *pChartView;
 
 protected slots:
-    virtual void updateSeries() = 0;
-
-private:
-    QTimer *pTimer;
+    virtual void update() = 0;
 };
 
 #endif // RESOURCEWIDGET_H

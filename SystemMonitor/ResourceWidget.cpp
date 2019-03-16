@@ -1,5 +1,5 @@
 #include "ResourceWidget.h"
-#include <QTimer>
+#include "SysInfo.h"
 #include <QtCharts/QChartView>
 #include <QVBoxLayout>
 
@@ -10,11 +10,8 @@ ResourceWidget::ResourceWidget(QWidget *parent)
       COLOR_LIGHT_BLUE(0x61afef),
       COLOR_PINK(0xe575a7),
       PEN_WIDTH(3),
-      pChartView(new QtCharts::QChartView(this)),
-      pTimer(new QTimer(this)) {
-    pTimer->setInterval(1000);
-    connect(pTimer, &QTimer::timeout, this, &ResourceWidget::updateSeries);
-    pTimer->start();
+      pChartView(new QtCharts::QChartView(this)) {
+    connect(&SysInfo::instance(), &SysInfo::toResourceWidget, this, &ResourceWidget::update);
 
     pChartView->setRenderHint(QPainter::Antialiasing);
     pChartView->chart()->legend()->setVisible(false);
