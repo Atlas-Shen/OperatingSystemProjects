@@ -51,6 +51,7 @@ void System::update() {
     emit toMainWindow();
     emit toStatusWidget();
     emit toResourceWidget();
+    emit toProcessModel();
 }
 
 void System::setCpuUsage() {
@@ -85,21 +86,23 @@ void System::setProcessMap() {
     for (auto &dirName : dirNameList) {
         bool ok;
         int pid = dirName.toInt(&ok);
-        string name;
-        mProcessIdMap[pid] = make_shared<ProcessInfo>();
         if (ok) {
+            mProcessIdList.push_back(pid);
+            mProcessIdMap[pid] = make_shared<ProcessInfo>();
+            mProcessIdMap[pid]->pid = pid;
+
             string path = "/proc/" + to_string(pid);
             bool shouldEnd = false;
             int count = 0;
 
             string line, temp;
             stringstream ss;
-            mFile.open(path + "status");
+            mFile.open(path + "/status");
             while (getline(mFile, line) && !shouldEnd) {
                 ++count;
                 switch (count) {
                 case 1:
-                    name = line.substr(line.find_last_of(' ') + 1);
+                    mProcessIdMap[pid]->name = line.substr(line.find_last_of('\t') + 1, string::npos);
                     break;
                 case 3: {
                     auto start = line.find_first_of('(') + 1;
@@ -108,13 +111,13 @@ void System::setProcessMap() {
                     break;
                 }
                 case 9: {
-                    auto start = line.find_first_not_of(' ');
-                    string uid = line.substr(start, line.find_first_of(' ', start) - start);
+                    auto start = line.find_first_of('\t') + 1;
+                    string uid = line.substr(start, line.find_first_of('\t', start) - start);
                     ifstream searchFile("/etc/passwd");
                     while (getline(searchFile, temp)) {
-                        auto pos = temp.find(uid);
+                        auto pos = temp.find(":x:" + uid);
                         if (pos != string::npos) {
-                            mProcessIdMap[pid]->user = temp.substr(0, pos - 3);
+                            mProcessIdMap[pid]->user = temp.substr(0, pos);
                             break;
                         }
                     }
@@ -134,7 +137,7 @@ void System::setProcessMap() {
                     mProcessIdMap[pid]->memPercent = qBound(0.0, percent, 100.0);
                     break;
                 }
-                case 24: //part of shared
+                case 24:
                     ss.str(line);
                     ss >> temp >> mProcessIdMap[pid]->shared;
                     break;
@@ -153,7 +156,7 @@ void System::setProcessMap() {
             shouldEnd = false;
             count = 0;
             unsigned long long curCpuTime = 0;
-            mFile.open(path + "stat");
+            mFile.open(path + "/stat");
             while (mFile >> temp && !shouldEnd) {
                 ++count;
                 switch (count) {
@@ -165,9 +168,26 @@ void System::setProcessMap() {
                     break;
                 case 15: {
                     curCpuTime += stoull(temp);
-                    auto percent = (curCpuTime - mProcessIdMap[pid]->prevCpuTime) * 100.0 / (mCurCpuRawData[0] - mPrevCpuRawData[0]);
-                    mProcessIdMap[pid]->cpuPercent = qBound(0.0, percent, 100.0);
+
+                    ifstream file("/proc/stat");
+                    string s;
+                    file >> s;
+                    unsigned long long a[10];
+                    for (auto &i : a)
+                        file >> i;
+                    file.close();
+                    unsigned long long curCpuTotal = 0;
+                    for (auto &i : a)
+                        curCpuTotal += i;
+
+                    //auto percent = (curCpuTime - mProcessIdMap[pid]->prevCpuTime) * 100.0
+                    // (mCurCpuRawData[0] - mPrevCpuRawData[0]);
+                    auto percent = (curCpuTime - mProcessIdMap[pid]->prevCpuTime) * 100.0
+                                   / (curCpuTotal - mProcessIdMap[pid]->prevCpuTotal);
+                    //mProcessIdMap[pid]->cpuPercent = qBound(0.0, percent, 100.0);
+                    mProcessIdMap[pid]->cpuPercent = percent;
                     mProcessIdMap[pid]->prevCpuTime = curCpuTime;
+                    mProcessIdMap[pid]->prevCpuTotal = curCpuTotal;
                     break;
                 }
                 case 18:
@@ -186,8 +206,8 @@ void System::setProcessMap() {
                 }
             }
             mFile.close();
+            mProcessNameMap[mProcessIdMap[pid]->name] = mProcessIdMap[pid];
         }
-        mProcessNameMap[name] = mProcessIdMap[pid];
     }
 }
 
@@ -203,7 +223,5 @@ System::System() {
     mStartingTime = QDateTime::currentDateTime().addSecs(-lastingTime.toInt());
     mFile.close();
 
-    setCpuUsage();
-    setMemSwapUsage();
-    setProcessMap();
+    update();
 }

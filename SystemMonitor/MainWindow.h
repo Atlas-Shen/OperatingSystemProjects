@@ -6,6 +6,7 @@
 class CpuWidget;
 class MemSwapWidget;
 class StatusWidget;
+class ProcessModel;
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ private:
     CpuWidget *pCpuWidget;
     MemSwapWidget *pMemSwapWidget;
     StatusWidget *pStatusWidget;
+    ProcessModel *pProcessModel;
 };
 
 #endif // MAINWINDOW_H
