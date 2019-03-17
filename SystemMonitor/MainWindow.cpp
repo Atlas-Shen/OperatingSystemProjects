@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "SysInfo.h"
+#include "System.h"
 #include "CpuWidget.h"
 #include "MemSwapWidget.h"
 #include "StatusWidget.h"
@@ -12,18 +12,15 @@ MainWindow::MainWindow(QWidget *parent)
       pMemSwapWidget(new MemSwapWidget(this)),
       pStatusWidget(new StatusWidget(this)) {
 
-    connect(&SysInfo::instance(), &SysInfo::toMainWindow, this, &MainWindow::update);
-
     ui->setupUi(this);
+    connect(&System::instance(), &System::toMainWindow, this, &MainWindow::update);
     ui->resourceTab->layout()->addWidget(pCpuWidget);
     ui->resourceTab->layout()->addWidget(pMemSwapWidget);
     ui->statusBar->layout()->addWidget(pStatusWidget);
-
-    ui->hostnameLabel->setText(SysInfo::instance().hostname());
-    ui->systemVerLabel->setText(SysInfo::instance().systemVer());
-    ui->cpuinfoLabel->setText(SysInfo::instance().cpuInfo());
-    ui->startingTimeLabel->setText(SysInfo::instance().startingTime());
-
+    ui->hostnameLabel->setText(System::instance().hostname());
+    ui->systemVerLabel->setText(System::instance().systemVer());
+    ui->cpuinfoLabel->setText(System::instance().cpuInfo());
+    ui->startingTimeLabel->setText(System::instance().startingTime());
     update();
 }
 
@@ -32,6 +29,6 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::update() {
-    ui->lastingTimeLabel->setText(SysInfo::instance().lastingTime());
+    ui->lastingTimeLabel->setText(System::instance().lastingTime());
     ui->statusBar->showMessage(QDateTime::currentDateTime().toString("yyyy-MM-dd ddd hh:mm:ss"));
 }

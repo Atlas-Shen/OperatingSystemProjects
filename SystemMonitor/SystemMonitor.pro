@@ -31,7 +31,8 @@ SOURCES += \
     MemSwapWidget.cpp \
     ResourceWidget.cpp \
     StatusWidget.cpp \
-    SysInfo.cpp
+    System.cpp \
+    ProcessModel.cpp
 
 HEADERS += \
     CpuWidget.h \
@@ -39,7 +40,8 @@ HEADERS += \
     MemSwapWidget.h \
     ResourceWidget.h \
     StatusWidget.h \
-    SysInfo.h
+    System.h \
+    ProcessModel.h
 
 FORMS += \
     MainWindow.ui \

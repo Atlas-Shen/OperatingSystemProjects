@@ -1,5 +1,5 @@
 #include "CpuWidget.h"
-#include "SysInfo.h"
+#include "System.h"
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QChartView>
 
@@ -20,11 +20,11 @@ CpuWidget::CpuWidget(QWidget *parent)
     chart->axes(Qt::Horizontal, pSeries).first()->setRange(0, CHART_X_RANGE);
     chart->axes(Qt::Vertical, pSeries).first()->setRange(0, 100);
 
-    pSeries->append(mSeriesX++, SysInfo::instance().cpuUsage());
+    pSeries->append(mSeriesX++, System::instance().cpuUsage());
 }
 
 void CpuWidget::update() {
-    pSeries->append(mSeriesX++, SysInfo::instance().cpuUsage());
+    pSeries->append(mSeriesX++, System::instance().cpuUsage());
     if (pSeries->count() > CHART_X_RANGE + 1) {
         pSeries->remove(0);
         QChart *chart = pChartView->chart();

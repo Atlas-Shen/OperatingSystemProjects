@@ -1,5 +1,5 @@
 #include "MemSwapWidget.h"
-#include "SysInfo.h"
+#include "System.h"
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QChartView>
 
@@ -27,13 +27,13 @@ MemSwapWidget::MemSwapWidget(QWidget *parent)
     chart->axes(Qt::Horizontal, pMemSeries).first()->setRange(0, CHART_X_RANGE);
     chart->axes(Qt::Vertical, pMemSeries).first()->setRange(0, 100);
 
-    pMemSeries->append(mMemSeriesX++, SysInfo::instance().memUsage());
-    pSwapSeries->append(mSwapSeriesX++, SysInfo::instance().swapUsage());
+    pMemSeries->append(mMemSeriesX++, System::instance().memUsage());
+    pSwapSeries->append(mSwapSeriesX++, System::instance().swapUsage());
 }
 
 void MemSwapWidget::update() {
-    pMemSeries->append(mMemSeriesX++, SysInfo::instance().memUsage());
-    pSwapSeries->append(mSwapSeriesX++, SysInfo::instance().swapUsage());
+    pMemSeries->append(mMemSeriesX++, System::instance().memUsage());
+    pSwapSeries->append(mSwapSeriesX++, System::instance().swapUsage());
     if (pMemSeries->count() > CHART_X_RANGE + 1) {
         pMemSeries->remove(0);
         pSwapSeries->remove(0);

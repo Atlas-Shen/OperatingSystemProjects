@@ -1,5 +1,5 @@
 #include "ResourceWidget.h"
-#include "SysInfo.h"
+#include "System.h"
 #include <QtCharts/QChartView>
 #include <QVBoxLayout>
 
@@ -11,7 +11,7 @@ ResourceWidget::ResourceWidget(QWidget *parent)
       COLOR_PINK(0xe575a7),
       PEN_WIDTH(3),
       pChartView(new QtCharts::QChartView(this)) {
-    connect(&SysInfo::instance(), &SysInfo::toResourceWidget, this, &ResourceWidget::update);
+    connect(&System::instance(), &System::toResourceWidget, this, &ResourceWidget::update);
 
     pChartView->setRenderHint(QPainter::Antialiasing);
     pChartView->chart()->legend()->setVisible(false);
