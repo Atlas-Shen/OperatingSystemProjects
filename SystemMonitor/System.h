@@ -8,32 +8,9 @@
 #include <fstream>
 #include <string>
 #include <array>
-#include <unordered_map>
-#include <vector>
-#include <memory>
 
 class System : public QObject {
     Q_OBJECT
-
-private:
-    struct ProcessInfo {
-        std::string name;
-        std::string user;
-        std::string state;
-        int pid;
-        int ppid;
-        unsigned long long prevCpuTime;
-        unsigned long long prevCpuTotal;
-        double cpuPercent;
-        double memPercent;
-        unsigned long size;     //in KB
-        unsigned long resident; //in KB
-        unsigned long shared;   //in KB
-        long priority;
-        long nice;
-        long threadNum;
-        unsigned long long startTime;
-    };
 
 public:
     static System &instance();
@@ -48,15 +25,10 @@ public:
     double memUsage() const;
     double swapUsage() const;
 
-    const std::vector<int> &processIdList() const;
-    const std::unordered_map<int, std::shared_ptr<ProcessInfo>> &processIdMap() const;
-    const std::unordered_map<std::string, std::shared_ptr<ProcessInfo>> &processNameMap() const;
-
 signals:
     void toMainWindow();
     void toStatusWidget();
     void toResourceWidget();
-    void toProcessModel();
 
 private:
     std::ifstream mFile;
@@ -68,14 +40,9 @@ private:
     double mMemUsage;
     double mSwapUsage;
 
-    std::vector<int> mProcessIdList;
-    std::unordered_map<int, std::shared_ptr<ProcessInfo>> mProcessIdMap;
-    std::unordered_map<std::string, std::shared_ptr<ProcessInfo>> mProcessNameMap;
-
     void update();
     void setCpuUsage();
     void setMemSwapUsage();
-    void setProcessMap();
 
     System();
     System(const System &) = delete;
@@ -107,18 +74,6 @@ inline double System::memUsage() const {
 
 inline double System::swapUsage() const {
     return mSwapUsage;
-}
-
-inline const std::vector<int> &System::processIdList() const {
-    return mProcessIdList;
-}
-
-inline const std::unordered_map<int, std::shared_ptr<System::ProcessInfo> > &System::processIdMap() const {
-    return mProcessIdMap;
-}
-
-inline const std::unordered_map<std::string, std::shared_ptr<System::ProcessInfo> > &System::processNameMap() const {
-    return mProcessNameMap;
 }
 
 #endif // SYSINFO_H

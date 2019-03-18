@@ -16,16 +16,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     connect(&System::instance(), &System::toMainWindow, this, &MainWindow::update);
+
     ui->resourceTab->layout()->addWidget(pCpuWidget);
     ui->resourceTab->layout()->addWidget(pMemSwapWidget);
     ui->statusBar->layout()->addWidget(pStatusWidget);
+
     ui->tableView->setModel(pProcessModel);
     ui->tableView->setShowGrid(false);
+    //ui->tableView->setSortingEnabled(true);
 
     ui->hostnameLabel->setText(System::instance().hostname());
     ui->systemVerLabel->setText(System::instance().systemVer());
     ui->cpuinfoLabel->setText(System::instance().cpuInfo());
     ui->startingTimeLabel->setText(System::instance().startingTime());
+
+    //connect(ui->tableView->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
+    //ui->tableView, &QTableView::sortByColumn);
+
     update();
 }
 
