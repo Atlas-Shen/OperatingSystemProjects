@@ -71,7 +71,7 @@ void System::setCpuUsage() {
 void System::setMemSwapUsage() {
     struct sysinfo info;
     sysinfo(&info);
-    auto memUsage = (info.totalram - info.freeram) * 100.0 / info.totalram;
+    auto memUsage = (info.totalram - info.freeram - info.bufferram) * 100.0 / info.totalram;
     mMemUsage = qBound(0.0, memUsage, 100.0);
     auto swapUsage = (info.totalswap - info.freeswap) * 100.0 / info.totalswap;
     mSwapUsage =  qBound(0.0, swapUsage, 100.0);

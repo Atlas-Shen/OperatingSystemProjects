@@ -23,15 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->tableView->setModel(pProcessModel);
     ui->tableView->setShowGrid(false);
+    connect(ui->tableView->horizontalHeader(), &QHeaderView::sectionClicked, this, &MainWindow::mySortByColumn);
     //ui->tableView->setSortingEnabled(true);
 
     ui->hostnameLabel->setText(System::instance().hostname());
     ui->systemVerLabel->setText(System::instance().systemVer());
     ui->cpuinfoLabel->setText(System::instance().cpuInfo());
     ui->startingTimeLabel->setText(System::instance().startingTime());
-
-    //connect(ui->tableView->horizontalHeader(), &QHeaderView::sortIndicatorChanged,
-    //ui->tableView, &QTableView::sortByColumn);
 
     update();
 }
@@ -43,4 +41,8 @@ MainWindow::~MainWindow() {
 void MainWindow::update() {
     ui->lastingTimeLabel->setText(System::instance().lastingTime());
     ui->statusBar->showMessage(QDateTime::currentDateTime().toString("yyyy-MM-dd ddd hh:mm:ss"));
+}
+
+void MainWindow::mySortByColumn(int column) {
+    ui->tableView->sortByColumn(column);
 }

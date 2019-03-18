@@ -40,6 +40,9 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout1_1">
           <item>
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+          <item>
            <widget class="QPushButton" name="searchButton">
             <property name="text">
              <string>Search Process</string>
@@ -47,29 +50,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="detailButton">
-            <property name="text">
-             <string>Process Detail</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer1_1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
            <widget class="QPushButton" name="endButton">
             <property name="text">
-             <string>Kill Process</string>
+             <string>End Process</string>
             </property>
            </widget>
           </item>

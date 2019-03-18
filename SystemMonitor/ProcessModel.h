@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <memory>
 
 class QTimer;
 
@@ -13,6 +12,19 @@ class ProcessModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
+    enum {
+        Name,
+        User,
+        State,
+        PID,
+        PPID,
+        CPUPercent,
+        MemPercent,
+        Priority,
+        Nice,
+        ThreadNum,
+    };
+
     explicit ProcessModel(QObject *parent = nullptr);
 
     // Header:
@@ -40,18 +52,15 @@ private:
         unsigned long long prevCpuTotal;
         double cpuPercent;
         double memPercent;
-        unsigned long size;     //in KB
-        unsigned long resident; //in KB
-        unsigned long shared;   //in KB
-        long priority;
-        long nice;
-        long threadNum;
-        unsigned long long startTime;
+        long long priority;
+        long long nice;
+        long long threadNum;
     };
 
-    std::vector<int> mProcessIdList;
-    std::unordered_map<int, std::shared_ptr<ProcessInfo>> mProcessIdMap;
-    std::unordered_map<std::string, std::shared_ptr<ProcessInfo>> mProcessNameMap;
+    int sortedColumn;
+    std::vector<int> showList; //process to show
+    std::unordered_map<int, ProcessInfo> pidMap;
+    std::unordered_multimap<std::string, int> nameMap;
     QTimer *pTimer;
 };
 
