@@ -26,6 +26,7 @@ MemSwapWidget::MemSwapWidget(QWidget *parent)
     //chart->axes(Qt::Horizontal, mSeries).first()->setVisible(false);
     chart->axes(Qt::Horizontal, pMemSeries).first()->setRange(0, CHART_X_RANGE);
     chart->axes(Qt::Vertical, pMemSeries).first()->setRange(0, 100);
+    //chart->axes(Qt::Horizontal, pMemSeries).first()->setVisible(false);
 
     pMemSeries->append(mMemSeriesX++, System::instance().memUsage());
     pSwapSeries->append(mSwapSeriesX++, System::instance().swapUsage());

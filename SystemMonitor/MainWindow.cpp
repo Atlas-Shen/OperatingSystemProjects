@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->tableView->setModel(pProcessModel);
     ui->tableView->setShowGrid(false);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(ui->tableView->horizontalHeader(), &QHeaderView::sectionClicked, this, &MainWindow::mySortByColumn);
     //ui->tableView->setSortingEnabled(true);
 

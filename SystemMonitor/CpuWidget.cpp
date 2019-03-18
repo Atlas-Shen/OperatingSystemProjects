@@ -19,6 +19,7 @@ CpuWidget::CpuWidget(QWidget *parent)
     chart->createDefaultAxes();
     chart->axes(Qt::Horizontal, pSeries).first()->setRange(0, CHART_X_RANGE);
     chart->axes(Qt::Vertical, pSeries).first()->setRange(0, 100);
+    //chart->axes(Qt::Horizontal, pSeries).first()->setVisible(false);
 
     pSeries->append(mSeriesX++, System::instance().cpuUsage());
 }
