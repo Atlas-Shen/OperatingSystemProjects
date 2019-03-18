@@ -6,30 +6,30 @@ using namespace std;
 
 QString System::hostname() {
     string info;
-    mFile.open("/proc/sys/kernel/hostname");
-    getline(mFile, info);
-    mFile.close();
+    file.open("/proc/sys/kernel/hostname");
+    getline(file, info);
+    file.close();
     return QString::fromStdString(info);
 }
 
 QString System::systemVer() {
     string info;
-    mFile.open("/proc/sys/kernel/ostype");
-    getline(mFile, info);
-    mFile.close();
-    mFile.open("/proc/sys/kernel/osrelease");
+    file.open("/proc/sys/kernel/ostype");
+    getline(file, info);
+    file.close();
+    file.open("/proc/sys/kernel/osrelease");
     string version;
-    getline(mFile, version);
+    getline(file, version);
     info += ' ' + version;
-    mFile.close();
+    file.close();
     return QString::fromStdString(info);
 }
 
 QString System::cpuInfo() {
     string info;
-    mFile.open("/proc/cpuinfo");
+    file.open("/proc/cpuinfo");
     QString cpuInfo;
-    while (getline(mFile, info)) {
+    while (getline(file, info)) {
         QString line = QString::fromStdString(info);
         if (line.startsWith("model name"))
             cpuInfo = line.mid(line.indexOf(':') + 2);
@@ -38,7 +38,7 @@ QString System::cpuInfo() {
             break;
         }
     }
-    mFile.close();
+    file.close();
     return cpuInfo;
 }
 
@@ -51,20 +51,20 @@ void System::update() {
 }
 
 void System::setCpuUsage() {
-    mPrevCpuRawData = move(mCurCpuRawData);
+    prevCpuRawData = move(curCpuRawData);
     string cpu;
-    mFile.open("/proc/stat");
-    mFile >> cpu;
+    file.open("/proc/stat");
+    file >> cpu;
     unsigned long long a[10];
     for (auto &i : a)
-        mFile >> i;
-    mFile.close();
-    mCurCpuRawData[1] = a[3];
-    mCurCpuRawData[0] = 0;
+        file >> i;
+    file.close();
+    curCpuRawData[1] = a[3];
+    curCpuRawData[0] = 0;
     for (auto &i : a)
-        mCurCpuRawData[0] += i;
-    auto deltaCpuTotal = mCurCpuRawData[0] - mPrevCpuRawData[0];
-    auto cpuUsage = (deltaCpuTotal - (mCurCpuRawData[1] - mPrevCpuRawData[1])) * 100.0 / deltaCpuTotal;
+        curCpuRawData[0] += i;
+    auto deltaCpuTotal = curCpuRawData[0] - prevCpuRawData[0];
+    auto cpuUsage = (deltaCpuTotal - (curCpuRawData[1] - prevCpuRawData[1])) * 100.0 / deltaCpuTotal;
     mCpuUsage = qBound(0.0, cpuUsage, 100.0);
 }
 
@@ -79,15 +79,15 @@ void System::setMemSwapUsage() {
 
 System::System() {
     string info;
-    mFile.open("/proc/uptime");
-    getline(mFile, info);
+    file.open("/proc/uptime");
+    getline(file, info);
     QString lastingTime = QString::fromStdString(info.substr(0, info.find('.')));
     mStartingTime = QDateTime::currentDateTime().addSecs(-lastingTime.toInt());
-    mFile.close();
+    file.close();
 
     update();
 
-    mTimer.setInterval(1000);
-    connect(&mTimer, &QTimer::timeout, this, &System::update);
-    mTimer.start();
+    timer.setInterval(1000);
+    connect(&timer, &QTimer::timeout, this, &System::update);
+    timer.start();
 }

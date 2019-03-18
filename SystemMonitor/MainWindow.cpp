@@ -5,6 +5,7 @@
 #include "MemSwapWidget.h"
 #include "StatusWidget.h"
 #include "ProcessModel.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -26,8 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->tableView->horizontalHeader(), &QHeaderView::sectionClicked, this, &MainWindow::mySortByColumn);
-    //ui->tableView->setSortingEnabled(true);
+    connect(ui->tableView->horizontalHeader(), &QHeaderView::sectionClicked, this, &MainWindow::sortProcess);
+    connect(ui->refreshButton, &QPushButton::clicked, this, &MainWindow::refreshProcess);
+    connect(ui->searchButton, &QPushButton::clicked, this, &MainWindow::searchProcess);
 
     ui->hostnameLabel->setText(System::instance().hostname());
     ui->systemVerLabel->setText(System::instance().systemVer());
@@ -46,6 +48,28 @@ void MainWindow::update() {
     ui->statusBar->showMessage(QDateTime::currentDateTime().toString("yyyy-MM-dd ddd hh:mm:ss"));
 }
 
-void MainWindow::mySortByColumn(int column) {
+void MainWindow::sortProcess(int column) {
     ui->tableView->sortByColumn(column);
+}
+
+void MainWindow::refreshProcess() {
+    pProcessModel->refresh();
+}
+
+void MainWindow::searchProcess() {
+    QString searchText = ui->lineEdit->text();
+    ui->lineEdit->clear();
+    if (searchText.isEmpty()) {
+        QMessageBox::warning(this, "Warning", "Empty search input!");
+    } else {
+        bool ok;
+        int pid = searchText.toInt(&ok);
+        if (ok) {
+            if (!pProcessModel->search(pid))
+                QMessageBox::warning(this, "Warning", "No such process! Wrong process id!");
+        } else {
+            if (!pProcessModel->search(searchText.toStdString()))
+                QMessageBox::warning(this, "Warning", "No such process! Wrong process name!");
+        }
+    }
 }

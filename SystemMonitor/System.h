@@ -31,11 +31,11 @@ signals:
     void toResourceWidget();
 
 private:
-    std::ifstream mFile;
+    std::ifstream file;
     QDateTime mStartingTime;
-    QTimer mTimer;
-    std::array<unsigned long long, 2> mPrevCpuRawData;
-    std::array<unsigned long long, 2> mCurCpuRawData;
+    QTimer timer;
+    std::array<unsigned long long, 2> prevCpuRawData;
+    std::array<unsigned long long, 2> curCpuRawData;
     double mCpuUsage;
     double mMemUsage;
     double mSwapUsage;

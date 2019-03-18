@@ -40,7 +40,7 @@ QVariant ProcessModel::headerData(int section, Qt::Orientation orientation, int 
         case Nice:
             return QString("Nice");
         case ThreadNum:
-            return QString("ThreadNum");
+            return QString("Thread");
         }
     }
     return QVariant();
@@ -73,9 +73,9 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const {
         case PPID:
             return pidMap.at(pid).ppid;
         case CPUPercent:
-            return QString("%1%").arg(pidMap.at(pid).cpuPercent, 0, 'f', 2);
+            return QString("%1%").arg(pidMap.at(pid).cpuPercent, 0, 'f', 4);
         case MemPercent:
-            return QString("%1%").arg(pidMap.at(pid).memPercent, 0, 'f', 2);
+            return QString("%1%").arg(pidMap.at(pid).memPercent, 0, 'f', 4);
         case Priority:
             return pidMap.at(pid).priority;
         case Nice:
@@ -138,6 +138,33 @@ void ProcessModel::sort(int column, Qt::SortOrder order) {
         break;
     }
     emit dataChanged(index(0, 0, QModelIndex()), index(rowCount(), columnCount(), QModelIndex()), {Qt::DisplayRole});
+}
+
+void ProcessModel::refresh() {
+    showList.clear();
+    update();
+}
+
+bool ProcessModel::search(int pid) {
+    if (pidMap.count(pid) == 1) {
+        showList.clear();
+        showList.push_back(pid);
+        emit dataChanged(index(0, 0, QModelIndex()), index(rowCount(), columnCount(), QModelIndex()), {Qt::DisplayRole});
+        return true;
+    }
+    return false;
+}
+
+bool ProcessModel::search(string name) {
+    if (nameMap.count(name) != 0) {
+        showList.clear();
+        auto equalRange = nameMap.equal_range(name);
+        for (auto iter = equalRange.first; iter != equalRange.second; ++iter)
+            showList.push_back(iter->second);
+        emit dataChanged(index(0, 0, QModelIndex()), index(rowCount(), columnCount(), QModelIndex()), {Qt::DisplayRole});
+        return true;
+    }
+    return false;
 }
 
 void ProcessModel::update() {

@@ -9,8 +9,8 @@ MemSwapWidget::MemSwapWidget(QWidget *parent)
     : ResourceWidget(parent),
       pMemSeries(new QLineSeries(this)),
       pSwapSeries(new QLineSeries(this)),
-      mMemSeriesX(0),
-      mSwapSeriesX(0) {
+      memSeriesX(0),
+      swapSeriesX(0) {
     QPen memPen(COLOR_DARK_BLUE);
     memPen.setWidth(PEN_WIDTH);
     pMemSeries->setPen(memPen);
@@ -28,13 +28,13 @@ MemSwapWidget::MemSwapWidget(QWidget *parent)
     chart->axes(Qt::Vertical, pMemSeries).first()->setRange(0, 100);
     //chart->axes(Qt::Horizontal, pMemSeries).first()->setVisible(false);
 
-    pMemSeries->append(mMemSeriesX++, System::instance().memUsage());
-    pSwapSeries->append(mSwapSeriesX++, System::instance().swapUsage());
+    pMemSeries->append(memSeriesX++, System::instance().memUsage());
+    pSwapSeries->append(swapSeriesX++, System::instance().swapUsage());
 }
 
 void MemSwapWidget::update() {
-    pMemSeries->append(mMemSeriesX++, System::instance().memUsage());
-    pSwapSeries->append(mSwapSeriesX++, System::instance().swapUsage());
+    pMemSeries->append(memSeriesX++, System::instance().memUsage());
+    pSwapSeries->append(swapSeriesX++, System::instance().swapUsage());
     if (pMemSeries->count() > CHART_X_RANGE + 1) {
         pMemSeries->remove(0);
         pSwapSeries->remove(0);

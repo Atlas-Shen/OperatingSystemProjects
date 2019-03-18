@@ -21,7 +21,9 @@ public:
 
 public slots:
     void update();
-    void mySortByColumn(int);
+    void sortProcess(int);
+    void refreshProcess();
+    void searchProcess();
 
 private:
     Ui::MainWindow *ui;

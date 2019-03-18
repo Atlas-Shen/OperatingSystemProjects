@@ -18,7 +18,7 @@ private slots:
 
 private:
     QtCharts::QLineSeries *pSeries;
-    qint64 mSeriesX;
+    qint64 seriesX;
 };
 
 #endif // CPUWIDGET_H

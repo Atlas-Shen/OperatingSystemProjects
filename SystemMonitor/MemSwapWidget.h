@@ -19,8 +19,8 @@ private slots:
 private:
     QtCharts::QLineSeries *pMemSeries;
     QtCharts::QLineSeries *pSwapSeries;
-    qint64 mMemSeriesX;
-    qint64 mSwapSeriesX;
+    qint64 memSeriesX;
+    qint64 swapSeriesX;
 };
 
 #endif // MEMWIDGET_H
