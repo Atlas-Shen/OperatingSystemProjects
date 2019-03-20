@@ -12,39 +12,18 @@ QString System::hostname() {
     return QString::fromStdString(info);
 }
 
-QString System::systemVer() {
+QString System::version() {
     string info;
-    file.open("/proc/sys/kernel/ostype");
+    file.open("/proc/version_signature");
     getline(file, info);
     file.close();
-    file.open("/proc/sys/kernel/osrelease");
-    string version;
-    getline(file, version);
-    info += ' ' + version;
-    file.close();
     return QString::fromStdString(info);
-}
-
-QString System::cpuInfo() {
-    string info;
-    file.open("/proc/cpuinfo");
-    QString cpuInfo;
-    while (getline(file, info)) {
-        QString line = QString::fromStdString(info);
-        if (line.startsWith("model name"))
-            cpuInfo = line.mid(line.indexOf(':') + 2);
-        else if (line.startsWith("siblings")) {
-            cpuInfo += "  x  " + line.mid(line.indexOf(':') + 2);
-            break;
-        }
-    }
-    file.close();
-    return cpuInfo;
 }
 
 void System::update() {
     setCpuUsage();
     setMemSwapUsage();
+    setCpuInfo();
     emit toMainWindow();
     emit toStatusWidget();
     emit toResourceWidget();
@@ -75,6 +54,22 @@ void System::setMemSwapUsage() {
     mMemUsage = qBound(0.0, memUsage, 100.0);
     auto swapUsage = (info.totalswap - info.freeswap) * 100.0 / info.totalswap;
     mSwapUsage =  qBound(0.0, swapUsage, 100.0);
+}
+
+void System::setCpuInfo() {
+    mCpuInfo.clear();
+    string info;
+    file.open("/proc/cpuinfo");
+    while (getline(file, info)) {
+        QString line = QString::fromStdString(info);
+        if (line.startsWith("processor"))
+            mCpuInfo << line;
+        else if (line.startsWith("model name"))
+            mCpuInfo << line;
+        else if (line.startsWith("cpu MHz"))
+            mCpuInfo << line;
+    }
+    file.close();
 }
 
 System::System() {

@@ -24,6 +24,7 @@ public slots:
     void sortProcess(int);
     void refreshProcess();
     void searchProcess();
+    void endProcess();
 
 private:
     Ui::MainWindow *ui;

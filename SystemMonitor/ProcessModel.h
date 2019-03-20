@@ -12,6 +12,19 @@ class ProcessModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
+    enum {
+        Name,
+        User,
+        State,
+        PID,
+        PPID,
+        CPUPercent,
+        MemPercent,
+        Priority,
+        Nice,
+        ThreadNum
+    };
+
     explicit ProcessModel(QObject *parent = nullptr);
 
     // Header:
@@ -34,19 +47,6 @@ private slots:
     void update();
 
 private:
-    enum {
-        Name,
-        User,
-        State,
-        PID,
-        PPID,
-        CPUPercent,
-        MemPercent,
-        Priority,
-        Nice,
-        ThreadNum
-    };
-
     struct ProcessInfo {
         std::string name;
         std::string user;

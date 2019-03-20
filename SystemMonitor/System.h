@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QTimer>
+#include <QStringList>
 #include <fstream>
 #include <string>
 #include <array>
@@ -16,14 +17,13 @@ public:
     static System &instance();
 
     QString hostname();
-    QString systemVer();
-    QString cpuInfo();
+    QString version();
     QString startingTime() const;
     QString lastingTime() const;
-
     double cpuUsage() const;
     double memUsage() const;
     double swapUsage() const;
+    const QStringList &cpuInfo() const;
 
 signals:
     void toMainWindow();
@@ -39,10 +39,12 @@ private:
     double mCpuUsage;
     double mMemUsage;
     double mSwapUsage;
+    QStringList mCpuInfo;
 
     void update();
     void setCpuUsage();
     void setMemSwapUsage();
+    void setCpuInfo();
 
     System();
     System(const System &) = delete;
@@ -61,7 +63,7 @@ inline QString System::startingTime() const {
 }
 
 inline QString System::lastingTime() const {
-    return QString::number(mStartingTime.secsTo(QDateTime::currentDateTime()) + 's');
+    return QString::number(mStartingTime.secsTo(QDateTime::currentDateTime())) + 's';
 }
 
 inline double System::cpuUsage() const {
@@ -74,6 +76,10 @@ inline double System::memUsage() const {
 
 inline double System::swapUsage() const {
     return mSwapUsage;
+}
+
+inline const QStringList &System::cpuInfo() const {
+    return mCpuInfo;
 }
 
 #endif // SYSINFO_H
