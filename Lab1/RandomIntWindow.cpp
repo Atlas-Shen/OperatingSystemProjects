@@ -25,5 +25,5 @@ void RandomIntWindow::update() {
     int seed = static_cast<int>(std::chrono::steady_clock::now().time_since_epoch().count());
     std::default_random_engine generator(seed);
     std::uniform_int_distribution<int> distribution(INT_MIN, INT_MAX);
-    ui->pidLabel->setText(QString::number(distribution(generator), 10));
+    ui->randomIntLabel->setText(QString::number(distribution(generator), 10));
 }

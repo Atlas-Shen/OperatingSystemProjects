@@ -22,5 +22,5 @@ TimeWindow::~TimeWindow() {
 }
 
 void TimeWindow::update() {
-    ui->pidLabel->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd ddd hh:mm:ss"));
+    ui->timeLabel->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd ddd hh:mm:ss"));
 }
