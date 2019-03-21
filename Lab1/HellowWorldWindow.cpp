@@ -1,5 +1,5 @@
 #include "HellowWorldWindow.h"
-#include "ui_HellowWorld.h"
+#include "ui_HellowWorldWindow.h"
 
 HelloWorldWindow::HelloWorldWindow(int pid, QWidget *parent)
     : QWidget(parent),
