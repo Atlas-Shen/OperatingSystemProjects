@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <signal.h>
 #include <cstdlib>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -43,6 +44,9 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(ui->restartButton, &QPushButton::clicked, []() {
         system("shutdown -r now");
+    });
+    connect(ui->runButton, &QPushButton::clicked, []() {
+        QProcess::startDetached("/home/atlas/QtProjects/OperatingSystemProjects/SystemMonitor/Lab1/Lab1");
     });
 
     update();
