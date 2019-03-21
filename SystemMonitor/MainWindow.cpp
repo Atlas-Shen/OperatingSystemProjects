@@ -7,6 +7,7 @@
 #include "ProcessModel.h"
 #include <QMessageBox>
 #include <signal.h>
+#include <cstdlib>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -36,6 +37,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->hostnameLabel->setText(System::instance().hostname());
     ui->versionLabel->setText(System::instance().version());
     ui->startingTimeLabel->setText(System::instance().startingTime());
+
+    connect(ui->shutDownButton, &QPushButton::clicked, []() {
+        system("shutdown -h now");
+    });
+    connect(ui->restartButton, &QPushButton::clicked, []() {
+        system("shutdown -r now");
+    });
 
     update();
 }

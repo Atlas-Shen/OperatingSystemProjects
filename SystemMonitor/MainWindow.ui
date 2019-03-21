@@ -30,7 +30,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="processTab">
        <attribute name="title">
@@ -275,6 +275,44 @@
           </item>
           <item>
            <spacer name="horizontalSpacer3_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout3_7">
+          <item>
+           <widget class="QPushButton" name="shutDownButton">
+            <property name="text">
+             <string>Shut Down</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="restartButton">
+            <property name="text">
+             <string>Restart</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="runButton">
+            <property name="text">
+             <string>Run Lab1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer3_7">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
