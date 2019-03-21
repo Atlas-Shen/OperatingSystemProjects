@@ -7,12 +7,12 @@ namespace Ui {
 class HellowWorld;
 }
 
-class HelloWorld : public QWidget {
+class HelloWorldWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit HelloWorld(int pid, QWidget *parent = nullptr);
-    ~HelloWorld();
+    explicit HelloWorldWindow(int pid, QWidget *parent = nullptr);
+    ~HelloWorldWindow();
 
 private:
     Ui::HellowWorld *ui;

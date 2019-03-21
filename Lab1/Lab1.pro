@@ -26,13 +26,19 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        HellowWorld.cpp
+    RandomIntWindow.cpp \
+    TimeWindow.cpp \
+    HellowWorldWindow.cpp
 
 HEADERS += \
-        HellowWorld.h
+    RandomIntWindow.h \
+    TimeWindow.h \
+    HellowWorldWindow.h
 
 FORMS += \
-        HellowWorld.ui
+    RandomIntWindow.ui \
+    TimeWindow.ui \
+    HellowWorldWindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
